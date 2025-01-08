@@ -15,8 +15,12 @@ jobs:
           workspaces: |
             ./source/gammon-lib
             ./source/gammon-windows
-      - run: sudo apt-get install mingw-w64
-      - run: cargo build --release --artifact-dir artifacts
+      - run: |
+          set -xeu
+          sudo apt-get install mingw-w64
+          export ARTIFACTS="$(pwd)/artifacts"
+          cd source/gammon-windows
+          cargo build --release --artifact-dir "$ARTIFACTS"
       - uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
