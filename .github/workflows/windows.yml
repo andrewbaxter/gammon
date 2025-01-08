@@ -18,9 +18,12 @@ jobs:
       - run: |
           set -xeu
           sudo apt-get install mingw-w64
-          export ARTIFACTS="$(pwd)/artifacts"
-          cd source/gammon-windows
-          cargo build --release --artifact-dir "$ARTIFACTS"
+          export ARTIFACTS="$(pwd)"/artifacts
+          mkdir -p "$ARTIFACTS"
+          export TARGET="$(pwd)/target"
+          mkdir -p "$TARGET"
+          (cd source/gammon-windows; cargo build --release --artifact-dir "$ARTIFACTS")
+          cp "$TARGET"/x86_*/*.exe "$ARTIFACTS"/
       - uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
