@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gammon API</title>
+    <link rel="stylesheet" href="style.css" />
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({ startOnLoad: true });
+    </script>
+  </head>
+  <body>
+    <h1>Gammon Stand API</h1>
+    <a href="index_en.html">Back</a>
+    <p>
+      This is the API games use to talk to the arcade, to do things like accept
+      tokens and get user info.
+    </p>
+    <ul>
+      <li>
+        <p>This is an HTTP (no S) API to <code>http://127.0.0.1:42243</code></p>
+      </li>
+      <li>
+        <p>
+          All requests are <code>POST</code> with a JSON payload, and the
+          response is a JSON payload as well
+        </p>
+      </li>
+      <li>
+        <p>
+          At the moment there are no error responses - if there's an issue I can
+          check logs, but in normal operation from the game perspective it's
+          fine to assume these calls will always work
+        </p>
+      </li>
+      <li>
+        <p>
+          Responses may have additional properties for features in testing.
+          Please ignore them until they are documented.
+        </p>
+      </li>
+    </ul>
+    <h2>Coin acceptance API</h2>
+    <p>Coins/tokens are also referred to as payments here.</p>
+    <p>
+      There are no actual coins/tokens - everything is done via NFC cards, but
+      anyway this API serves the general purpose of "accepting coins".
+    </p>
+    <pre class="mermaid">
+---
+title: Singleplayer
+---
+flowchart TD
+    ask_payment -->|Got payment| commit_payment[Send commit_payment]
+    ask_payment --> wait_payment[Waiting for payment]
+    wait_payment -->|Sleep 0.1s| ask_payment
+    commit_payment --> start_game{Start game}
+    </pre>
+    <pre class="mermaid">
+---
+title: Multiplayer
+---
+flowchart TD
+    player_select{No players} -->|Press start| ask_payment[Send ask_payment]
+    ask_payment -->|Got payment| countdown
+    ask_payment --> wait_payment[Waiting for payment]
+    wait_payment -->|Sleep 0.1s| ask_payment
+    wait_payment -->|Press start| player_select
+    countdown -->|Countdown done| commit_payment[Send commit_payment]
+    countdown[Start countdown] -->|Press start| release_payment[Send release_payment]
+    release_payment --> player_select
+    commit_payment --> start_game{Start game}
+</pre
+    >
+    <h3><code>{"v1": { "ask_payment": { ... } } }</code></h3>
+    <p>This does several things:</p>
+    <ol>
+      <li>
+        <p>Makes the card reader start accepting tokens, if it isn't already</p>
+      </li>
+      <li><p>If no token has been accepted, returns an empty response</p></li>
+      <li>
+        <p>
+          If a token has been accepted, reserves that token (so future calls
+          don't return the same token) and
+        </p>
+      </li>
+      <li><p>Returns the reservation ID</p></li>
+    </ol>
+    <p>
+      You're expected to repeatedly call this method (several times a second is
+      fine) as long as you need a token, until you receive a token.
+    </p>
+    <p>
+      The first time you call this method it'll likely return no payment
+      (token), just initialize the card reader.
+    </p>
+    <p>
+      If this method isn't called for a few seconds it stops accepting tokens.
+    </p>
+    <h4>Request structure</h4>
+    <pre class="code">
+{ "v1": { "ask_payment": {
+    "client_payment_id": {
+      "game_id": "my_game",
+      "id": "payment123"
+    }
+} } }</pre
+    >
+    <p>
+      <code>client_payment_id</code> is a unique ID for the payment (an
+      idempotency token) composed of your game ID and a unique portion you
+      generate as you see fit. Basically, after a payment is made for a
+      <code>client_payment_id</code>, all requests for that
+      <code>client_payment_id</code> will return the same data and no further
+      tokens will be accepted. Use different <code>client_payment_ids</code> to
+      accept multiple coins. You can use a random number or the current
+      timestamp if you don't need this functionality.
+    </p>
+    <p>
+      A committed payment will be recorded to the game in the
+      <code>client_payment_id</code>.
+    </p>
+    <p>
+      Only one token can be requested at a time (there's only one reader).
+      Making requests with a different <code>client_payment_id</code>s before a
+      token is accepted will replace the previous request.
+    </p>
+    <h4>Success response, no token</h4>
+    <pre class="code">
+{ "ok": {
+    "payment": null
+} }
+    </pre>
+    <h4>Success response, token reserved</h4>
+    <pre class="code">
+{ "ok": {
+    "payment": {
+        "client_payment_id": {
+          "game_id": "my_game",
+          "id": "payment123"
+        }
+    }
+} }
+    </pre>
+    <p><code>id</code> is the reservation ID, used by other calls.</p>
+    <h3><code>{"v1": { "release_payment": { ... } } }</code></h3>
+    <p>
+      This releases a payment reservation. For instance, if a player that tapped
+      in used the wrong card, or they decide they don't want to play before the
+      game starts. This functionality is optional but may make for a better
+      player experience.
+    </p>
+    <h4>Request structure</h4>
+    <pre class="code">
+{ "v1": { "release_payment": {
+    "client_payment_id": {
+      "game_id": "my_game",
+      "id": "payment123"
+    }
+} } }</pre
+    >
+    <h4>Success response</h4>
+    <pre class="code">
+{ "ok": null }
+    </pre>
+    <h3><code>{"v1": { "commit_clear_payments": { ... } } }</code></h3>
+    <p>
+      When player selection is complete and no further changes can be made, call
+      this to record the payment to the game. If any token reservations were
+      lost (e.g. due to bugs), this call will also release them, and can be used
+      to clear all reservations by sending the request with no "commit"
+      reservations listed.
+    </p>
+    <h4>Request structure</h4>
+    <pre class="code">
+{ "v1": { "commit_clear_payments": {
+    "commit_payment_ids": [
+        {
+          "game_id": "my_game",
+          "id": "payment123"
+        }
+    ]
+} } }</pre
+    >
+    <h4>Success response</h4>
+    <pre class="code">
+{ "ok": null }
+    </pre>
+  </body>
+</html>

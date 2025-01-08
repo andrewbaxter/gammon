@@ -1,0 +1,98 @@
+@font-face {
+  font-family: quicksand;
+  src: url(./Quicksand-VariableFont_wght.ttf);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: quicksand, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #e4e7ea;
+  color: black;
+}
+
+body {
+  max-width: 20cm;
+}
+
+a {
+  color: #8d313a;
+}
+
+p {
+  color: black;
+  line-height: 1.5;
+}
+
+li {
+  margin: 0.5cm 0;
+}
+
+img.logo {
+	width: 100%;
+}
+
+h1 {
+	text-align: right;
+	margin-bottom: 1cm;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #5e4444;
+}
+
+h1 {
+  text-transform: uppercase;
+}
+
+h2 {
+  text-transform: capitalize;
+}
+
+img {
+  max-width: 100%;
+}
+
+.linkbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  column-gap: 0.9cm;
+  row-gap: 0.3cm;
+
+  & > a {
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.linkbar_spacer {
+  flex-grow: 1;
+}
+
+.contact {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5cm;
+}
+
+code,
+pre.code {
+  text-transform: initial;
+  font-family: monospace;
+  color: rgb(70, 57, 57);
+  background: none;
+}

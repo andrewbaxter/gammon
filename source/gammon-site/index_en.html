@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gammon: Indie Game Arcade/Cafe</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <img src="cafe_interior.png" alt="カフェインテリアのスケッチ" />
+	<img src="logo.svg" alt="Gammon" class="logo" />
+    <h1>Indie Game Arcade/Cafe</h1>
+    <div class="linkbar">
+      <a href="#intro">Overview</a>
+      <a href="#state">Current state</a>
+      <a href="#system">How it works</a>
+      <a href="#benefits">Benefits for developers</a>
+      <a href="#games">What sorts of games?</a>
+      <a href="#adapting">Preparing a game</a>
+      <a href="#owner">The cafe person</a>
+      <div class="linkbar_spacer"></div>
+      <a href="index.html">日本語</a>
+    </div>
+    <a id="intro"></a>
+    <h2>Overview</h2>
+    <p>
+      This is a project to create a space for people to play, talk about, and
+      watch others play indie games over coffee and food. Unlike traditional
+      arcades which are loud, unaccommodating, and cater mainly to nostalgic or
+      hardcore gamers, this will be a relaxing space that anyone with an
+      interest in games can enjoy.
+    </p>
+    <p>
+      The space will also host challenges, tournaments, and other game-related
+      events.
+    </p>
+    <a id="state"></a>
+    <h2>Current state</h2>
+    <p>
+      The game stand software is finished and Gammon is now in the business
+      planning and preparation stages, with a goal of opening early 2025.
+    </p>
+    <a id="system"></a>
+    <h2>How it works</h2>
+    <ol>
+      <li><p>A customer enters the store</p></li>
+      <li>
+        <p>
+          They order at the counter. Each menu item includes 1 or more "play
+          tokens". The clerk charges an NFC card with their tokens and gives it
+          to the customer to use while in the store.
+        </p>
+      </li>
+      <li>
+        <p>
+          While the customer waits for their order they can start playing games
+          or watch others play (or demo videos) on the big screen.
+        </p>
+      </li>
+      <li>
+        <p>
+          If the customer gets tired of playing games, they can order a drink
+          and take a break to watch others.
+        </p>
+      </li>
+    </ol>
+    <p>
+      The store staff will help players play games and find other players for
+      multiplayer games.
+    </p>
+    <a id="benefits"></a>
+    <h2>Benefits for developers</h2>
+    <p>
+      For indie developers, there are a lot of benefits to having a game in the
+      arcade. In no particular order:
+    </p>
+    <ul>
+      <li>
+        <p>
+          It's an additional source of revenue - aside from a small amount of
+          work adapting the game for the arcade there's no costs.
+        </p>
+      </li>
+      <li>
+        <p>
+          It provides exposure - while in the arcade, other players will see it
+          being played which will build interest.
+        </p>
+      </li>
+      <li>
+        <p>
+          If someone enjoys the game at the arcade, they may decide to purchase
+          it themselves.
+        </p>
+      </li>
+      <li>
+        <p>
+          Multiplayer games have limited lifespans due to needing an active
+          player pool. But at the arcade there's an always-available pool of
+          players (other customers).
+        </p>
+      </li>
+      <li>
+        <p>
+          Home gaming tends to favor long-form games with tens of hours of
+          content, but a game with only 5 or 10 minutes of content is viable in
+          an arcade setting.
+        </p>
+      </li>
+      <li>
+        <p>
+          The arcade provides a way to do limited early or demo releases and
+          gather feedback.
+        </p>
+      </li>
+      <li>
+        <p>
+          The arcade is a great location to hold release events, tournaments,
+          and other promotional activities.
+        </p>
+      </li>
+    </ul>
+    <a id="games"></a>
+    <h2>What sorts of games?</h2>
+    <p>
+      We'd love to have games that are easy to pick up and where an average play
+      lasts around 5 minutes. The games can be single- or 2-player, or possibly
+      allow local multiplayer.
+    </p>
+    <p>For example:</p>
+    <ul>
+      <li><p>Traditional arcade games</p></li>
+      <li><p>Racing games</p></li>
+      <li><p>Sports games</p></li>
+      <li><p>Fighting games</p></li>
+      <li><p>Boss rush games</p></li>
+      <li><p>Puzzle games</p></li>
+      <li><p>Game-jam games or experimental games</p></li>
+      <li><p>Game demos - a self-contained segment of a larger game</p></li>
+      <li><p>Short narrative games</p></li>
+    </ul>
+    <p>
+      A longer game that has many stages could be modified so that a single play
+      is a single level, with a level-select screen.
+    </p>
+    <a id="adapting"></a>
+    <h2>Preparing a game</h2>
+    <p>
+      Basically, games must move to the action as directly as possible (i.e. not
+      have an intro/main menu/settings/tutorial/pause screen) and must accept
+      tokens.
+    </p>
+    <p>There are two approaches to accepting tokens:</p>
+    <ul>
+      <li>
+        <p>
+          <em>Gammon</em> handles payment and player select - this is the
+          easiest option.
+        </p>
+        <p>
+          The game can define the minimum and maximum number of players in a
+          manifest file. The Gammon software will handle player selection and
+          token payments. Once players and payments are selected, the game will
+          be launched which can move immediately to gameplay.
+        </p>
+      </li>
+      <li>
+        <p>
+          The <em>game</em> handles payment and player select - this is the most
+          flexible option.
+        </p>
+        <p>
+          Gammon has a simple <a href="./api_en.html">HTTP API</a> for
+          requesting and accepting play tokens. When a player selects the game,
+          the game will be immediately launched. The game is responsible for
+          allowing players to join and receive tokens via the HTTP API.
+        </p>
+        <p>
+          This is the most flexible option, allowing a custom player-select
+          screen and advanced payment mechanics, like paying to revive after
+          failure or for in-game boosts. It also makes repeated plays of the
+          same game faster since there's no need to re-start the game
+          executable.
+        </p>
+      </li>
+    </ul>
+    <a id="owner"></a>
+    <h2>The cafe person</h2>
+    <p class="contact">
+      <strong>Contact</strong>: Andrew Baxter
+      <a href="mailto:arcafe1@isandrew.com">(e-mail)</a>
+      <a href="https://x.com/gammon_japan">@gammon_japan</a>
+    </p>
+    <p>
+      I'm a software developer who's been living in Japan (in the Tokyo area)
+      for 13 years. I love indie games and thought by starting a cafe like this
+      I could get more involved in the community and create a great place to
+      hang out.
+    </p>
+  </body>
+</html>
