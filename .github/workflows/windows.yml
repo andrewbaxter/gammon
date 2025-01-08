@@ -1,6 +1,9 @@
+on:
+  push:
+    branches:
+      - master
 jobs:
   build:
-    name: Windows executables
     steps:
       - uses: actions/checkout@v3
       - uses: dtolnay/rust-toolchain@stable
@@ -11,7 +14,7 @@ jobs:
           workspaces: |
             ./source/gammon-lib
             ./source/gammon-windows
-      - run: sudo apt-get install mingw-w64
+      - run: apt-get install mingw-w64
       - run: cargo build --release --artifact-dir artifacts
       - uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')

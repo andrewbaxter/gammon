@@ -2,6 +2,7 @@
 name = "arcade_windows"
 version = "0.1.0"
 edition = "2021"
+publish = false
 
 [dependencies]
 native-windows-derive = "1"
