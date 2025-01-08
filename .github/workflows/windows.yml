@@ -23,6 +23,7 @@ jobs:
           export TARGET="$(pwd)/target"
           mkdir -p "$TARGET"
           (cd source/gammon-windows; cargo build --release --target-dir "$TARGET")
+          find "$TARGET"
           cp "$TARGET"/x86_*/*.exe "$ARTIFACTS"/
       - uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
