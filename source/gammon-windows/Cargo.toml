@@ -7,7 +7,7 @@ publish = false
 [dependencies]
 native-windows-derive = "1"
 native-windows-gui = "1"
-arcade_shared = { path = "../gammon-lib" }
+gammon-lib = { path = "../gammon-lib" }
 tokio = { version = "1", features = ["sync", "net", "rt", "macros"] }
 tokio-stream = { version = "0.1", features = ["net", "signal"] }
 htwrap = "0.10"

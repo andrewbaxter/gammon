@@ -1,5 +1,5 @@
 use {
-    arcade_shared::{
+    gammon_lib::{
         interface::{
             general::PlayerMeta,
             proto::gamestand::{
@@ -135,7 +135,7 @@ impl htserve::handler::Handler<Body> for ServerState {
 
             mod resp {
                 use {
-                    arcade_shared::interface::proto::gamestand,
+                    gammon_lib::interface::proto::gamestand,
                     http::Response,
                     htwrap::htserve::responses::{
                         response_200_json,

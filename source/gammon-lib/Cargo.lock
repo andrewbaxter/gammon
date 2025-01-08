@@ -36,20 +36,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "arcade_shared"
-version = "0.1.0"
-dependencies = [
- "bytes",
- "chrono",
- "good-ormning-runtime",
- "http",
- "serde",
- "serde_json",
- "tempfile",
- "url",
-]
-
-[[package]]
 name = "autocfg"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -150,6 +136,20 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e13624c2627564efccf4934284bdd98cbaa14e79b0b5a141218e507b3a823456"
 dependencies = [
  "percent-encoding",
+]
+
+[[package]]
+name = "gammon-lib"
+version = "0.1.0"
+dependencies = [
+ "bytes",
+ "chrono",
+ "good-ormning-runtime",
+ "http",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "url",
 ]
 
 [[package]]
