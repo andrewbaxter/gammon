@@ -45,26 +45,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "arcade_windows"
-version = "0.1.2"
-dependencies = [
- "flowcontrol",
- "gammon-lib",
- "http",
- "http-body-util",
- "htwrap",
- "hyper",
- "hyper-util",
- "loga",
- "native-windows-derive",
- "native-windows-gui",
- "serde",
- "serde_json",
- "tokio",
- "tokio-stream",
-]
-
-[[package]]
 name = "async-stream"
 version = "0.3.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -462,6 +442,26 @@ dependencies = [
  "serde_json",
  "tempfile",
  "url",
+]
+
+[[package]]
+name = "gammon-windows"
+version = "0.1.2"
+dependencies = [
+ "flowcontrol",
+ "gammon-lib",
+ "http",
+ "http-body-util",
+ "htwrap",
+ "hyper",
+ "hyper-util",
+ "loga",
+ "native-windows-derive",
+ "native-windows-gui",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tokio-stream",
 ]
 
 [[package]]
