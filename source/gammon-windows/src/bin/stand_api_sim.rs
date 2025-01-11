@@ -1,17 +1,17 @@
 use {
-    gammon_lib::{
-        interface::{
-            general::PlayerMeta,
-            proto::gamestand::{
-                self,
-                v1::AbsClientPaymentId,
-                GameStandReq,
-                STAND_GAME_SOCKET,
-            },
-        },
-        ta_res,
+    flowcontrol::{
+        shed,
+        ta_return,
     },
-    flowcontrol::shed,
+    gammon_lib::interface::{
+        general::PlayerMeta,
+        proto::gamestand::{
+            self,
+            v1::AbsClientPaymentId,
+            GameStandReq,
+            STAND_GAME_SOCKET,
+        },
+    },
     http::Response,
     http_body_util::BodyExt,
     htwrap::htserve::{
@@ -127,7 +127,7 @@ struct ServerState {
 impl htserve::handler::Handler<Body> for ServerState {
     async fn handle(&self, args: HandlerArgs<'_>) -> Response<Body> {
         match async {
-            ta_res!(Response < Body >);
+            ta_return!(Response < Body >, loga::Error);
             let req =
                 serde_json::from_slice::<GameStandReq>(
                     &args.body.collect().await.context("Error reading request bytes")?.to_bytes(),
