@@ -26,6 +26,7 @@ use {
         },
     },
     loga::{
+        ea,
         Log,
         ResultContext,
     },
@@ -128,10 +129,11 @@ impl htserve::handler::Handler<Body> for ServerState {
     async fn handle(&self, args: HandlerArgs<'_>) -> Response<Body> {
         match async {
             ta_return!(Response < Body >, loga::Error);
+            let body = args.body.collect().await.context("Error reading request bytes")?.to_bytes();
             let req =
                 serde_json::from_slice::<GameStandReq>(
-                    &args.body.collect().await.context("Error reading request bytes")?.to_bytes(),
-                ).context("Failed to parse json request body")?;
+                    &body,
+                ).context_with("Failed to parse json request body", ea!(body = String::from_utf8_lossy(&body)))?;
 
             mod resp {
                 use {
